@@ -1606,7 +1606,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=wmappl
- VERSION=0.71
+ VERSION=0.80
 
 
 cat >>confdefs.h <<_ACEOF

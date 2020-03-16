@@ -31,6 +31,7 @@
  */
 
 #include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 #include "../config.h"
 #include "interface.xpm"
@@ -54,6 +55,8 @@ wmappl_opt *options = NULL;
 
 XpmButton *icons, *sleft, *sright, *pressed;
 int clearwindow = 0;
+time_t last_pressed_time = (time_t) 0;  /* JWT:PREVENT KEY-REPEAT FOR FUNCTION-INVOCATION KEYS! */
+
 int button_positions[] = {
 	5, 5,
 	5, 23,
@@ -91,8 +94,8 @@ int scroll_left() {
 
 /* scroll buttons right / move forward 2 icons in list */
 int scroll_right() {
-	if(    icons->next!=NULL 
-		&& icons->next->next!=NULL 
+	if(    icons->next!=NULL
+		&& icons->next->next!=NULL
 		&& icons->next->next->next!=NULL
 		&& icons->next->next->next->next!=NULL
 		&& icons->next->next->next->next->next!=NULL
@@ -105,6 +108,28 @@ int scroll_right() {
 	return 0;
 }
 
+/* JWT:scroll buttons all the way to the left */
+void scroll_home() {
+	while (icons->last!=NULL && icons->last->last!=NULL) {
+		icons=icons->last->last;
+	}
+	clearwindow=1;
+	set_button_positions();
+}
+
+/* JWT:scroll buttons all the way to the right */
+void scroll_end() {
+	while (icons->next!=NULL
+		&& icons->next->next!=NULL
+		&& icons->next->next->next!=NULL
+		&& icons->next->next->next->next!=NULL
+		&& icons->next->next->next->next->next!=NULL
+		&& icons->next->next->next->next->next->next!=NULL) {
+			icons=icons->next->next;
+	}
+	clearwindow=1;
+	set_button_positions();
+}
 
 #ifdef USE_TOOLTIPS
 char * wmappl_tooltip(int x, int y) {
@@ -144,6 +169,35 @@ void wmappl_paint(Display * dsp, Drawable drw, GC gc) {
 	draw_xpmbutton(sleft, dsp, drw, gc);
 	draw_xpmbutton(sright, dsp, drw, gc);
 
+}
+
+/* JWT:Invoke button at (relative-to the six displayed) offset (0-5): */
+void press_iconbtn(int icon_offset, int s) {
+	int i;
+	/* (2" DELAY TO PREVENT REPEATING) - USER HOLDING KEY DOWN! */
+	if (difftime (time (NULL), last_pressed_time) < 2)
+		return;
+
+	XpmButton *p = icons;
+
+	if (icon_offset < 0 || icon_offset > 5 || p == NULL)
+		return;   /* err:no buttons or selected out of range (shouldn't happen)! */
+
+	for (i = 1; i <= icon_offset; i++) {
+		if (p == NULL)
+			return;
+		p = p->next;
+	}
+	if (p != NULL && p->command != NULL) {
+		if (s == MOUSE_RELEASED) {
+			last_pressed_time = time (NULL);
+			if(options->debugmode)
+				fprintf(stderr, "Execute command: %s\n", p->command);
+			else
+				system(p->command);
+		}
+		set_xpmbutton_pressed(p, s);
+	}
 }
 
 /* mouse callback */
@@ -235,6 +289,65 @@ void wmappl_mouse(int x, int y, int z, int s) {
 		pressed = NULL;
 		released = NULL;
 	}
+}
+
+/* JWT:keyboard callback */
+void wmappl_keyboard(char kc, KeySym ks, int s) {
+	int redraw = 1;
+
+	switch (ks) {
+	case XK_Home:
+		set_xpmbutton_pressed(sleft, s);
+		if (s == MOUSE_RELEASED)
+			scroll_home();
+		break;
+	case XK_End:
+		set_xpmbutton_pressed(sright, s);
+		if (s == MOUSE_RELEASED)
+			scroll_end();
+		break;
+	default:
+		switch (kc) {
+		case ',':  /* < (LEFT (unshifted)) */
+			set_xpmbutton_pressed(sleft, s);
+			if (s == MOUSE_RELEASED)
+				scroll_left();
+			break;
+		case '.':  /* > (RIGHT (unshifted)) */
+			set_xpmbutton_pressed(sright, s);
+			if (s == MOUSE_RELEASED)
+				scroll_right();
+			break;
+		/* JWT:THE SIX VISIBLE BUTTONS ARE PRESSED BY CORRESPONDING NUMBERS AS SHOWN BELOW:
+
+			1 3 5
+			2 4 6
+
+		*/
+		case '1':  /* 1 (Upper-left most cell) */
+			press_iconbtn(0, s);
+			break;
+		case '2':  /* 2 (Lower-left most cell) */
+			press_iconbtn(1, s);
+			break;
+		case '3':  /* 3 (Upper-middle cell) */
+			press_iconbtn(2, s);
+			break;
+		case '4':  /* 4 (Lower-middle cell) */
+			press_iconbtn(3, s);
+			break;
+		case '5':  /* 5 (Upper-right most cell) */
+			press_iconbtn(4, s);
+			break;
+		case '6':  /* 6 (Lower-right most cell) */
+			press_iconbtn(5, s);
+			break;
+		default:
+			redraw = 0;
+		}
+	}
+	if (redraw)
+		dockapp_redraw();
 }
 
 char * get_abspath_to_icon(char *filename, IconPath *iconpath) {
@@ -606,6 +719,7 @@ int main(int argc, char **argv) {
 	/* set the paint and mouse callbacks */
 	dockapp_set_paint(wmappl_paint);
 	dockapp_set_mouse(wmappl_mouse);
+	dockapp_set_keyboard(wmappl_keyboard);
 
 #ifdef USE_TOOLTIPS
 	dockapp_set_tooltip(wmappl_tooltip);

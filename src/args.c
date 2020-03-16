@@ -157,8 +157,9 @@ void show_version()
 	printf("    Steve Akers\n");
 	printf("    Samoylov Olleg\n");
 	printf("    Jarek\n");
+	printf("\nKeyboard shortcuts added 2020, by Jim Turner (turnerjw784@yahoo.com)\n");
 	printf("\n"); 
-	printf("http://wmappl.sourceforge.net/\n");
+	printf("http://wmappl.sourceforge.net/\n\n");
 	exit(1);
 }								/* end show version */
 
@@ -191,6 +192,11 @@ void show_usage()
 	printf("  -V        \tshow version information\n");
 	printf("  -h        \tshow usage information (this info)\n");
 #endif
+	printf("\nKeyboard navigation:\n");
+	printf("\n  [,] (unshifted [<]): scroll left; [.] (unshifted [>]): scroll right;\n");
+	printf("  [Home], [End]: scroll all the way left / right respectively;\n");
+	printf("  [1] - [6]: Invoke button 1 - 6 (shown) in order as shown:\n\n");
+	printf("  |1|3|5|\n  |2|4|6|\n");
 
 	printf("\n");
 

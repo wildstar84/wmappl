@@ -47,7 +47,7 @@ extern wmappl_opt *options;
 /* callback function pointers */
 void (*paint_ptr) (Display * dsp, Drawable drw, GC g); 
 void (*mouse_ptr) (int x, int y, int b, int s);
-
+void (*keyboard_ptr) (char kc, KeySym ks, int s);
 
 /* tooltip specific info */
 #ifdef USE_TOOLTIPS
@@ -120,6 +120,7 @@ int dockapp_create(char *appname, char *geometry, char **interface,
 
 	/* set callbacks to NULL */
 	mouse_ptr = NULL;
+	keyboard_ptr = NULL;
 	paint_ptr = NULL;
 
 #ifdef USE_TOOLTIPS
@@ -246,7 +247,7 @@ int dockapp_create(char *appname, char *geometry, char **interface,
 #ifdef USE_TOOLTIPS
 				 PointerMotionMask | EnterWindowMask | LeaveWindowMask |
 #endif
-				 StructureNotifyMask);
+				 StructureNotifyMask | KeyPressMask | KeyReleaseMask);
 
 	/* set default tooltip foreground and background colors */
 #ifdef USE_TOOLTIPS
@@ -272,6 +273,8 @@ int dockapp_create(char *appname, char *geometry, char **interface,
 int dockapp_run() {
 	int close = 0;
 	XEvent e;
+	KeySym ks;  /* JWT:NEXT 2 FOR HANDLING KEYBOARD NAVIGATION: */
+	static char buf[10], n;
 
 #ifdef USE_TOOLTIPS
 	wmappl_time_t	now;
@@ -337,6 +340,20 @@ int dockapp_run() {
 					dockapp_hide_tooltip();
 				}
 #endif
+				break;
+			case KeyPress:  /* JWT:HANDLE KEYBOARD NAVIGATION: */
+				if (keyboard_ptr)
+				{
+					n = XLookupString (&(e).xkey, buf, 10, &ks, NULL);
+					keyboard_ptr(buf[0], ks, MOUSE_PRESSED);
+				}
+				break;
+			case KeyRelease:  /* JWT:HANDLE KEYBOARD NAVIGATION */
+				if (keyboard_ptr)
+				{
+					n = XLookupString (&(e).xkey, buf, 10, &ks, NULL);
+					keyboard_ptr(buf[0], ks, MOUSE_RELEASED);
+				}
 				break;
 #ifdef USE_TOOLTIPS
 			case EnterNotify:
@@ -449,6 +466,20 @@ int dockapp_set_paint(void (*func) (Display * dsp, Drawable drw, GC g)) {
 int dockapp_set_mouse(void (*func) (int x, int y, int b, int s)) {
 	if(func) {
 		mouse_ptr = func;
+		return 1;
+	}
+	return 0;
+}
+
+/* dockapp_set_keyboard
+ *	PARAMETERS:
+ *		void (*func)(char keychar, KeySym ks, int s) : pointer to keyboard function
+ *	RETURN:
+ *		int : returns non-zero on success
+ */
+int dockapp_set_keyboard(void (*func) (char kc, KeySym ks, int s)) {
+	if(func) {
+		keyboard_ptr = func;
 		return 1;
 	}
 	return 0;

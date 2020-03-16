@@ -120,6 +120,14 @@ int dockapp_set_paint(	void (*func)(Display *dsp, Drawable drw, GC g));
  */
 int dockapp_set_mouse(	void (*func)(int x, int y, int b, int s));
 
+/* dockapp_set_keyboard
+ *	PARAMETERS:
+ *		void (*func)(char keychar, KeySym ks, int s) : pointer to keyboard function
+ *	RETURN:
+ *		int : returns non-zero on success
+ */
+int dockapp_set_keyboard(void (*func) (char kc, KeySym ks, int s));
+
 /* dockapp_init_display
  *
  * RETURN: status. <0 on error, 0 when OK
