@@ -1,0 +1,184 @@
+2004-05-12  Casey Harkins <charkins@pobox.com>
+	* man/wmapplrc.5: updated for tooltip_font option
+
+2004-05-02  Casey Harkins <charkins@pobox.com>
+	* dockapp.c: use user specified font for tooltips (if given)
+	* options.c: new tooltip_font option
+	* wmappl.c: handle tooltip_font option in rc file
+
+2004-04-12  Olivier Leconte <olivier.leconte@nerim.net>
+	* wmappl.c: fix abort
+	* pixmap.c/h: new code, that generates pixmaps from icon files, 
+	based on Imlib2 [RFE #924252].
+	* xpmbutton.c: move pixmap stuff to pixmap.c
+	* configure.in: added support for Imlib2
+
+2004-04-07  Casey Harkins <charkins@pobox.com>
+	* src/options.c/h: new options for tooltip colors
+	* src/dockapp.c/h: configurable tooltip colors
+	* src/wmappl.c: parse and set tooltip_foreground and tooltip_background
+	* src/wmappl.c: changed bgcolor and bgicon options to background_color
+	and background_icon respectively
+	* src/leftarr.xpm,rightarr.xpm: added transparency
+	* man/wmapplrc.5: updated to reflect new options
+
+2004-04-06  Casey Harkins <charkins@pobox.com>
+	* src/xpmbutton.c: pixmaps now draw with transparency
+	* src/dockapp.c/h: new functions for setting background color/pixmap
+	* src/options.c/h: new options for bgcolor and bgicon
+	* src/wmappl.c: use bgicon or bgcolor if specified in rcfile
+
+2004-04-04  Casey Harkins <charkins@pobox.com>
+	* src/rcparser.c: changed char to int in read_line() [bug #929365]
+	
+2004-04-02  Olivier Leconte <olivier.leconte@nerim.net>
+	* configure.in: added support for gettimeofday() [RFE #923722]
+	* src/dockapp.c: support for gettimeofday() if exists, time() otherwise
+	* src/wmappl.c: get tooltip delay from rcfile, fix abort when no wmappl
+	section exists in rcfile
+	
+2004-03-11  Casey Harkins <charkins@pobox.com>
+	* man/: added man pages for wmappl and wmapplrc as well as the
+	automake/autoconf magic they need
+
+2004-02-22  Oliver Leconte <olivier.leconte@nerim.net>
+	* configure.in,src/Makefile.am: fixed (again) getopt_long autoconf macro
+
+	* src/getopt*.c, gnugetopt.h: added local getopt_long if host system
+	does not provide one
+
+2004-02-11  Oliver Leconte <olivier.leconte@nerim.net>
+	* wmappl.c: fixed calls to dockapp_get_display() in load_icons() before
+	XOpenDisplay() was performed ( dockapp_get_display() returned NULL )
+
+	* wmappl.c: fixed misplaced return rcfile
+
+	* wmappl.c: added re-parse of command line args after rcfile is loaded
+
+	* dockapp.c: added dockapp_init_display()
+
+2004-01-30  Casey Harkins  <charkins@pobox.com>
+	* options.c,options.h: added new wmappl_opt structure to track options
+
+	* args.c,args.h: updated to use wmappl_opt for storing options specified
+	on the command line
+
+	* wmappl.c: updated to use a wmappl_opt for options, adjusting rcfile
+	parsing to load options from [wmappl] section in rcfile
+
+2004-01-13  Casey Harkins  <charkins@pobox.com>
+	* dockapp.c,dockapp.h: renamed dockapp functions with dockapp_ prefix 
+	to provide a consistent "namespace" for the dockapp functions
+
+2003-12-30  Casey Harkins  <charkins@pobox.com>
+	* wmappl.c: changed return type from void to int in scroll_right()
+
+2003-12-17  Casey Harkins  <charkins@pobox.com>
+	* CHANGELOG,ChangeLog: converted CHANGELOG to a more standard format,
+	including converting all past entries
+
+	* configure.in: added --disable-tooltips option to configure script
+
+	* configure.in: added getopt_long autoconf macro to conditionally add
+	getopt_long support when available
+
+2003-12-16  Casey Harkins  <charkins@pobox.com>
+	* args.h,dockapps.h: hardcoded #defines for getopt_long and tooltips to
+	allow for the features to be tested
+
+	* Release: v0.69 (test release, not released publicly)
+
+	* sourceforge.net: started moving project to wmappl.sourceforge.net
+
+2003-12-14  Casey Harkins  <charkins@pobox.com>
+	* all: merged in two separate braches containing tooltip and autoconf
+	support, directory structure changed and autoconf requirements added
+
+	* args.c,wmappl.c: added command line options to specify window name and
+	to run in windowed mode, patch from Olivier Leconte
+
+	* wmappl.c: scroll wheel support, patch from Denilson F. de Sá based off
+	of WMix from timecop
+
+2002-04-30  Casey Harkins  <charkins@pobox.com>
+	* Makefile: switched from astyle to indent for code beautifying
+
+2001-10-27  Casey Harkins  <charkins@pobox.com>
+	* dockapp.c: added get_screen_coordinates() to translate dockapp coordinates
+	relative to the origin of the root window
+
+2001-10-22  Casey Harkins  <charkins@pobox.com>
+	* dockapp.c: smart sizing of tooltip window
+
+2001-10-17  Casey Harkins  <charkins@pobox.com>
+	* dockapp.c: started implementing tooltips in show_tooltip(), 
+	hide_tooltip(), update_tooltip() and run_dockapp() 
+
+2000-11-26  Casey Harkins  <charkins@pobox.com>
+	* dockapp.c: removed unused USPosition from XSizeHints bitmask
+
+	* Makefile: added fix-style target for beutifying source using astyle,
+	astyle.sourceforge.net
+
+2000-11-02  Casey Harkins  <charkins@pobox.com>
+	* Makefile: modified (un)install targets to function similar to rpm
+
+	* Release: v0.6
+
+2000-11-01  Casey Harkins  <charkins@pobox.com>
+	* wmappl.spec: Samoylov Olleg provided a wmappl.spec file for v0.2 which
+	was added to the distribution to be used with future releases
+
+2000-10-31  Casey Harkins  <charkins@pobox.com>
+	* rcparser.c: allow hash characters inside quoted strings, again
+
+2000-10-02  Casey Harkins  <charkins@pobox.com>
+	* dockapp.c: allow redraw without keyboard or mouse activity,
+	patch from Jarek (doesn't effect wmappl)
+
+2000-09-25  Casey Harkins  <charkins@pobox.com>
+	* all: complete rewrite, new configuration file format
+
+	* Release: v0.5
+
+1999-11-23  Casey Harkins  <charkins@pobox.com>
+	* wmappl.c: prevent core dump when hash occurred inside quoted string,
+	patch from Steve Akers
+
+	* wmappl.c: started implementing icon search path using libPropList
+
+	* wmappl.c: split into multiple files
+
+
+1999-10-14  Casey Harkins  <charkins@pobox.com>
+	* Release: v0.2
+
+1999-10-13  Casey Harkins  <charkins@pobox.com>
+	* wmappl.c: rewrote config file parser
+
+	* Makefile: created INSTALL_DIR and INSTALL_BIN variables to specify
+	installation locations
+
+1999-09-20  Casey Harkins  <charkins@pobox.com>
+	* Makefile: fixed permissions on installing data
+
+	* icons/: cleanup
+
+	* wmapplerc.sample: update
+
+1999-09-19  Casey Harkins  <charkins@pobox.com>
+	* Makefile: removed install-user target
+
+1999-09-15  Casey Harkins  <charkins@pobox.com>
+	* wmappl.c: stop scrolling with rightmost column containing icons,
+	patch from Richard Eisenman
+
+1999-09-14  Casey Harkins  <charkins@pobox.com>
+	* wmappl.c: fixed iconpath being prefixed with '/' when not specified on 
+	the command line 
+
+1999-08-31  Casey Harkins  <charkins@pobox.com>
+	* Makefile: prevent linking of c++ libs
+
+1999-07-29  Casey Harkins  <charkins@pobox.com>
+	* Release: v0.1

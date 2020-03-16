@@ -1,0 +1,43 @@
+WMAppl 0.71
+Copyright (c) 2000 Casey Harkins (charkins@pobox.com)
+
+See LICENSE for license information. (GPL version 2)
+
+To compile and install: (skip this is you installed the rpm)
+
+	Edit the Makefile and adjust the INCDIR, LIBDIR and DESTDIR if needed.
+
+	Make the binary:
+		make
+
+	Install the binary:
+		make install
+
+	OPTIONAL - install icons:
+		make install-icons
+
+Configuring:
+	
+	See the sample.wmapplrc for details. You'll want to create your
+configuration file as "~/.wmapplrc". You should also either place
+your 16x16 xpms in the /usr/local/share/pixmaps or specify the
+appropriate location(s) on the command line. The following
+command would search both /home/casey/.icons/ and /usr/local/share/wmappl/
+for icons. All icons specified are first tried as absolute paths.
+
+	wmappl --iconpath /home/casey/.icons/:/usr/local/share/wmappl
+
+
+	If you used installed the icons that came with wmappl, they
+were installed in the directory /usr/share/icons/wmappl. This directory
+is in the search path by default.
+
+For more information see:
+
+	http://www.pobox.com/~charkins/wmappl.html
+
+
+Icons are available from:
+
+	http://www.pobox.com/~charkins/wmappl/
+

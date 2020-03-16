@@ -1,0 +1,59 @@
+.TH wmappl 1 "March 9, 2004"
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+wmappl \- a scrolling application launcher dockapp
+.SH SYNOPSIS
+.B wmappl [options]
+.SH DESCRIPTION
+
+\fBwmappl\fP is an application launcher dockapp which displays an small icon for each
+application it is configured to launch. Any number of applications may be configured.
+Scroll arrows and optionally the scroll-wheel may be used to scroll through the list
+of configured applications.
+
+
+.SH OPTIONS
+.TP
+.B \-f,  \-\-rcfile <filename>
+absolute path of configuration file [default: ~/.wmapplrc]
+.TP
+.B \-i, \-\-iconpath <path>
+a colon separated path to search for icons
+.TP
+.B \-n, \-\-name <name>
+window name (specify different names to run multiple instances) [default: wmappl]
+.TP
+.B \-w,  \-\-window
+run in windowed mode, default is to run in withdrawn
+.TP
+.B \-d,  \-\-debug 
+dump debug information to stderr (commands are not actually executed)
+.TP
+.B \-V,  \-\-version
+show program version and exit
+.TP
+.B \-h,  \-\-help
+show usage information
+
+.SH "REPORTING BUGS"
+Report bugs at http://wmappl.sourceforge.net
+
+.SH "WARRANTY"
+This is free software with ABSOLUTELY NO WARRANTY
+
+.SH AUTHOR
+Casey Harkins <charkins@pobox.com>
+
+.SH SEE ALSO
+\fBwmapplrc(5)\f1
+

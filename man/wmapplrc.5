@@ -1,0 +1,149 @@
+.TH wmapplrc 1 "March 9, 2004"
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+wmapplrc \- configuration file for wmappl
+.SH DESCRIPTION
+
+The format of a wmappl configuration file consists of a number of sections, defined
+by a section name surrounded in square brakets, for example: "[section]". Each button
+that should appear in wmappl should have its own section. The lines following the section
+name specify the icon to use, the command to launch when the button is pressed and an
+optional tooltip string to be displayed.
+
+An optional \fB[wmappl]\fP section may be specified which specifies configuration
+options for wmappl. These options have the same names as the long command line
+options and are entirely optional. Command line arguments will override any specified
+in the configuration file. There are some options that have no cooresponding command
+line option.
+
+Anything after a pound sign ('#') is considered a comment and will be ignored. A line may
+be continued by ending the line in a backslash ('\\'). Blank lines and any invalid key=value
+pairs are ignored.
+
+.SH BUTTON SECTION OPTIONS
+.TP
+.B icon=<iconfile>
+xpm icon for the button, accepts an absolute path or a path relative to a directory in
+the iconpath
+.TP
+.B command=<command>
+command to execute when button is pressed, it should end with an \& to run it in the
+background
+.TP
+.B tooltip=<tooltip string>
+tooltip that should be displayed over the button when the mouse is hovered over it
+
+.SH WMAPPL SECTION OPTIONS
+.TP
+.B iconpath=<path1>:[path2]:...:[pathN]
+a colon separated path to search for icons
+.TP
+.B name=<windowname>
+window name (specify different names to run multiple instances)
+.TP
+.B tooltip_delay=<delay in milliseconds>
+delay in milliseconds before appearance of tooltip
+.TP
+.B window=
+run in windowed mode if this option is specified
+.TP
+.B debug=
+run in debug mode if this option is specified
+.TP
+.B background_color=<color>
+specifies the background color of wmappl
+.TP
+.B background_icon=<iconfile>
+xpm icon for the background of wmappl, accepts an absolute path or a path relative to
+a directory in the iconpath (takes precedence over background_color option)
+.TP
+.B tooltip_foreground=<color>
+foreground (text) color for tooltips
+.TP
+.B tooltip_background=<color>
+background color for tooltips
+.TP
+.B tooltip_font=<X11 font string>
+X11 font string for the font to use for tooltips
+
+.SH EXAMPLE
+
+The following example defines nine buttons, specifies wmappl options and demonstrates
+comments, line expansion and blank lines:
+
+    [wmappl]
+    iconpath=/usr/share/icons/wmappl:/usr/share/pixmaps/mini
+    name=Demo
+    window=
+    debug=
+    tooltip_delay=800                # 800 milliseconds
+    tooltip_foreground=rgb:ff/ff/ff  # white tooltip text
+    tooltip_background=rgb:ff/00/00  # red tooltip background
+    tooltip_font=-*-bitstream vera serif-*-*-*-*-*-*-*-*-*-*-*-*  # use vera serif font
+    background_color=rgb:73/7e/df    # light blue wmappl background
+    background_icon=checker.xpm
+    # the checkered background will override the light blue background
+    
+    [info]
+    icon = info.xpm
+    command = xmessage "Reports bugs to: \\
+    wmappl.sourceforge.net" &
+    tooltip = wmappl information
+    
+    [man wmappl]
+    icon = wmappl.xpm
+    command = xterm -fg white -bg black -e man wmappl &
+    tooltip = open the wmappl man page
+    
+    [wprefs]
+    icon = gnustep.xpm
+    command = /usr/share/GNUstep/WPrefs.app/WPrefs &
+    
+    [mozilla]
+    icon = mozilla.xpm
+    command = mozilla &
+    
+    [xterm]
+    icon = glowx.xpm
+    command = xterm &
+    
+    [ghostview]
+    icon = ghost.xpm
+    command = gv &
+    
+    [xmms]
+    icon = xmms.xpm
+    command = xmms &
+    tooltip = xmms gets a really really really   \\
+              really really really really really \\
+              really really really really really \\
+              long tooltip!
+    
+    [ssh to work]
+    icon = ssh.xpm
+    command = xterm -fg green -bg black \\
+              -e ssh -l user shell.work.com &
+
+
+.SH "REPORTING BUGS"
+Report bugs at http://wmappl.sourceforge.net
+
+.SH "WARRANTY"
+This is free software with ABSOLUTELY NO WARRANTY
+
+.SH AUTHOR
+Casey Harkins <charkins@pobox.com>
+
+.SH SEE ALSO
+\fBwmappl(1)\f1
+
